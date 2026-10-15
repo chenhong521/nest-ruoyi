@@ -1,0 +1,17 @@
+import { writeFileSync } from 'node:fs';
+const base = 'http://localhost:8080';
+const L = [];
+const img = await (await fetch(`${base}/captchaImage`)).json();
+const { Redis } = await import('ioredis');
+const redis = new Redis({ host:'localhost', port:6379 });
+const code = await redis.get(`captcha_codes:${img.uuid}`);
+const login = await (await fetch(`${base}/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username:'admin', password:'admin123', code, uuid:img.uuid }) })).json();
+const token = login.token;
+L.push('登录: code=' + login.code + (login.code===200?'✅':'❌'));
+const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
+const iat = payload.iat, exp = payload.exp;
+L.push('JWT 有效期: ' + (exp - iat) + ' 秒 = ' + ((exp-iat)/60) + ' 分钟 → ' + (exp-iat===1800?'✅ 30分钟':'❌ '+(exp-iat)+'秒'));
+const r = await fetch(`${base}/system/dict/data/type/sys_user_sex`, { headers:{ Authorization:`Bearer ${token}` } });
+L.push('dict 受保护接口: HTTP ' + r.status + ' → ' + (r.status===200?'✅':'❌'));
+writeFileSync('verify-token.txt', L.join('\n'), 'utf8');
+redis.quit();

@@ -1,12 +1,12 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard.js';
+import { pageResult, type PageQuery } from '../../../common/utils/page.js';
 import { PostService } from './post.service.js';
 
 /**
  * PostController：岗位接口
- * GET /system/post/list         岗位列表
- * GET /system/post/export
+ * GET /system/post/list   岗位分页列表（rows/total）
  * 需登录
  */
 @Controller('system/post')
@@ -16,9 +16,10 @@ export class PostController {
 
   @Get('list')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: '岗位列表' })
-  list(@Query('all') all?: string) {
-    // ?all=1 返回全部（含停用），默认只返启用（下拉用）
-    return all === '1' ? this.postService.findAll() : this.postService.findEnabled();
+  @ApiOperation({ summary: '岗位分页列表' })
+  async list(@Query() query: PageQuery) {
+    // 对齐若依 getDataTable：返回 {code,msg,rows,total}
+    const { rows, total } = await this.postService.findPage(query);
+    return pageResult(rows, total);
   }
 }

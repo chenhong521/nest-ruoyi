@@ -10,6 +10,9 @@ import { SysDept } from './modules/system/dept/entities/sys-dept.entity.js';
 import { SysPost } from './modules/system/post/entities/sys-post.entity.js';
 import { SysDictType } from './modules/system/dict/entities/sys-dict-type.entity.js';
 import { SysDictData } from './modules/system/dict/entities/sys-dict-data.entity.js';
+import { SysNotice } from './modules/system/notice/entities/sys-notice.entity.js';
+import { SysConfig } from './modules/system/config/entities/sys-config.entity.js';
+import { SysUserPost } from './modules/system/user/entities/sys-user-post.entity.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UserModule } from './modules/system/user/user.module.js';
 import { HealthModule } from './modules/health/health.module.js';
@@ -17,6 +20,8 @@ import { MenuModule } from './modules/system/menu/menu.module.js';
 import { DeptModule } from './modules/system/dept/dept.module.js';
 import { PostModule } from './modules/system/post/post.module.js';
 import { DictModule } from './modules/system/dict/dict.module.js';
+import { NoticeModule } from './modules/system/notice/notice.module.js';
+import { SysConfigModule } from './modules/system/config/config.module.js';
 
 @Module({
   imports: [
@@ -42,6 +47,9 @@ import { DictModule } from './modules/system/dict/dict.module.js';
           SysPost,
           SysDictType,
           SysDictData,
+          SysNotice,
+          SysConfig,
+          SysUserPost,
         ],
         // 若依表结构已定，绝不能自动改表
         synchronize: false,
@@ -61,6 +69,10 @@ import { DictModule } from './modules/system/dict/dict.module.js';
     PostModule,
     // 字典模块（GET /system/dict/type/list、data/type/{type}）
     DictModule,
+    // 公告模块（GET /system/notice/listTop）
+    NoticeModule,
+    // 参数配置模块（GET /system/config/configKey/{key}）
+    SysConfigModule,
   ],
 })
 export class AppModule {}

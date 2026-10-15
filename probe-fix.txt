@@ -1,0 +1,14 @@
+ry-vue 全部表:
+gen_table, gen_table_column, sys_config, sys_dept, sys_dict_data, sys_dict_type, sys_job, sys_job_log, sys_logininfor, sys_menu, sys_notice, sys_notice_read, sys_oper_log, sys_post, sys_role, sys_role_dept, sys_role_menu, sys_user, sys_user_post, sys_user_role
+
+sys_notice: ✅ 存在
+
+sys_config: ✅ 存在
+
+sys_user: ✅ 存在
+
+sys_dept: ✅ 存在
+
+sys_config 相关 key:
+  {"config_key":"sys.user.initPassword","config_value":"123456","config_name":"用户管理-账号初始密码"}
+  {"config_key":"sys.account.captchaEnabled","config_value":"true","config_name":"账号自助-验证码开关"}

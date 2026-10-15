@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SysPost } from './entities/sys-post.entity.js';
+import { paginate, type PageQuery } from '../../../common/utils/page.js';
 
 /**
  * PostService：岗位业务
@@ -13,13 +14,16 @@ export class PostService {
     private readonly postRepo: Repository<SysPost>,
   ) {}
 
-  /** 查询全部岗位，按排序 */
-  findAll() {
-    return this.postRepo.find({ order: { postSort: 'ASC' } });
-  }
-
-  /** 查询启用的岗位（status='0'），用于用户下拉 */
-  findEnabled() {
-    return this.postRepo.find({ where: { status: '0' }, order: { postSort: 'ASC' } });
+  /**
+   * 分页查询岗位列表（对齐若依 SysPostController.list → rows/total）
+   */
+  async findPage(query: PageQuery) {
+    const { skip, take, order } = paginate(query);
+    const [rows, total] = await this.postRepo.findAndCount({
+      order,
+      skip,
+      take,
+    });
+    return { rows, total };
   }
 }
